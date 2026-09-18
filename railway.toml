@@ -2,4 +2,5 @@
 builder = "dockerfile"
 
 [deploy]
+startCommand = "dotnet VehicleProfitTracker.API.dll"
 restartPolicyMaxRetries = 5
