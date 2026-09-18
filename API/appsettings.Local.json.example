@@ -1,0 +1,11 @@
+{
+  "_comment": "Copy this file to appsettings.Local.json and fill in real values. appsettings.Local.json is git-ignored — it will never be committed. Do NOT put real secrets in appsettings.json or appsettings.Development.json.",
+
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=YOUR_HOST;Database=postgres;Username=YOUR_USER;Password=YOUR_PASSWORD;SSL Mode=Require;Trust Server Certificate=true"
+  },
+
+  "Jwt": {
+    "Secret": "REPLACE_WITH_A_LONG_RANDOM_SECRET_AT_LEAST_32_CHARS"
+  }
+}
