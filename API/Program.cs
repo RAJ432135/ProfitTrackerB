@@ -42,11 +42,14 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// EF Core - PostgreSQL (Supabase). Always used, in every environment —
-// no in-memory fallback, so what you test locally is what runs in prod.
+// EF Core - PostgreSQL. Support both Railway (DATABASE_URL) and local/Supabase connections.
+// Railway automatically provides DATABASE_URL environment variable.
+var connectionString = builder.Configuration["DATABASE_URL"] 
+    ?? builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Neither DATABASE_URL environment variable nor 'DefaultConnection' connection string is configured.");
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")
-        ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.")));
+    options.UseNpgsql(connectionString));
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 
