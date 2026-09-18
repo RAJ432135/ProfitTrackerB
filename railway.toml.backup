@@ -1,0 +1,11 @@
+# Railway Build Configuration
+# Docker-based build using root Dockerfile
+
+[build]
+builder = "dockerfile"
+
+[deploy]
+# Dockerfile ENTRYPOINT handles startup command
+# No need to specify startCommand - Docker will use ENTRYPOINT
+restartPolicyMaxRetries = 5
+restartPolicyDelay = 5
