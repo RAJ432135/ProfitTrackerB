@@ -1,7 +1,5 @@
 [build]
 builder = "dockerfile"
-dockerfile = "Dockerfile"
 
 [deploy]
 restartPolicyMaxRetries = 5
-restartPolicyDelay = 5
