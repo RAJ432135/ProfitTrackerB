@@ -17,18 +17,59 @@ public class DashboardService
         _currentUser = currentUser;
     }
 
-    public Task<DashboardSummary> GetTodayAsync(CancellationToken ct = default) =>
-        BuildSummaryAsync(DateTime.UtcNow.Date, DateTime.UtcNow.Date, ct);
+    public Task<DashboardSummary> GetTodayAsync(CancellationToken ct = default)
+    {
+        var date = DateTime.UtcNow.Date;
+        var period = date.ToString("MMMM dd, yyyy");
+        return BuildSummaryAsync(date, date, period, ct);
+    }
 
     public Task<DashboardSummary> GetMonthAsync(CancellationToken ct = default)
     {
         var now = DateTime.UtcNow;
         var start = new DateTime(now.Year, now.Month, 1);
         var end = start.AddMonths(1).AddDays(-1);
-        return BuildSummaryAsync(start, end, ct);
+        var period = now.ToString("MMMM yyyy");
+        return BuildSummaryAsync(start, end, period, ct);
     }
 
-    private async Task<DashboardSummary> BuildSummaryAsync(DateTime from, DateTime to, CancellationToken ct)
+    public Task<DashboardSummary> GetLastMonthAsync(CancellationToken ct = default)
+    {
+        var now = DateTime.UtcNow;
+        var lastMonth = now.AddMonths(-1);
+        var start = new DateTime(lastMonth.Year, lastMonth.Month, 1);
+        var end = start.AddMonths(1).AddDays(-1);
+        var period = lastMonth.ToString("MMMM yyyy");
+        return BuildSummaryAsync(start, end, period, ct);
+    }
+
+    public Task<DashboardSummary> GetYearAsync(int? year = null, CancellationToken ct = default)
+    {
+        var targetYear = year ?? DateTime.UtcNow.Year;
+        var start = new DateTime(targetYear, 1, 1);
+        var end = new DateTime(targetYear, 12, 31);
+        var period = targetYear.ToString();
+        return BuildSummaryAsync(start, end, period, ct);
+    }
+
+    public Task<DashboardSummary> GetWeekAsync(CancellationToken ct = default)
+    {
+        var now = DateTime.UtcNow.Date;
+        var start = now.AddDays(-(int)now.DayOfWeek);
+        var end = start.AddDays(6);
+        var period = $"{start:MMM dd} - {end:MMM dd, yyyy}";
+        return BuildSummaryAsync(start, end, period, ct);
+    }
+
+    public Task<DashboardSummary> GetRangeAsync(DateTime fromDate, DateTime toDate, CancellationToken ct = default)
+    {
+        var from = fromDate.Date;
+        var to = toDate.Date;
+        var period = $"{from:MMM dd, yyyy} - {to:MMM dd, yyyy}";
+        return BuildSummaryAsync(from, to, period, ct);
+    }
+
+    private async Task<DashboardSummary> BuildSummaryAsync(DateTime from, DateTime to, string period, CancellationToken ct)
     {
         var userId = _currentUser.UserId ?? throw new UnauthorizedAppException("Not authenticated.");
 
@@ -56,6 +97,6 @@ public class DashboardService
         var totalIncome = vehicleSummaries.Sum(v => v.Income);
         var totalExpense = vehicleSummaries.Sum(v => v.Expense);
 
-        return new DashboardSummary(totalIncome, totalExpense, totalIncome - totalExpense, vehicleSummaries);
+        return new DashboardSummary(period, from, to, totalIncome, totalExpense, totalIncome - totalExpense, vehicleSummaries);
     }
 }

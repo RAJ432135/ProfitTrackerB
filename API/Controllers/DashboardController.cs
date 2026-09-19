@@ -21,7 +21,23 @@ public class DashboardController : ControllerBase
     public async Task<ActionResult<DashboardSummary>> Today(CancellationToken ct)
         => Ok(await _dashboardService.GetTodayAsync(ct));
 
+    [HttpGet("week")]
+    public async Task<ActionResult<DashboardSummary>> Week(CancellationToken ct)
+        => Ok(await _dashboardService.GetWeekAsync(ct));
+
     [HttpGet("month")]
     public async Task<ActionResult<DashboardSummary>> Month(CancellationToken ct)
         => Ok(await _dashboardService.GetMonthAsync(ct));
+
+    [HttpGet("last-month")]
+    public async Task<ActionResult<DashboardSummary>> LastMonth(CancellationToken ct)
+        => Ok(await _dashboardService.GetLastMonthAsync(ct));
+
+    [HttpGet("year")]
+    public async Task<ActionResult<DashboardSummary>> Year([FromQuery] int? year, CancellationToken ct)
+        => Ok(await _dashboardService.GetYearAsync(year, ct));
+
+    [HttpGet("range")]
+    public async Task<ActionResult<DashboardSummary>> Range([FromQuery] DateTime fromDate, [FromQuery] DateTime toDate, CancellationToken ct)
+        => Ok(await _dashboardService.GetRangeAsync(fromDate, toDate, ct));
 }
