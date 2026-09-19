@@ -73,12 +73,20 @@ public class DashboardService
     {
         var userId = _currentUser.UserId ?? throw new UnauthorizedAppException("Not authenticated.");
 
+        // Npgsql maps DateTime columns to 'timestamp with time zone' and rejects any
+        // parameter whose Kind isn't Utc. `new DateTime(y, m, d)` and model-bound query
+        // params both come back as Kind=Unspecified, which is what was causing the 500s
+        // on every dashboard route except /today (which happened to use .Date on an
+        // already-Utc value). Normalize both ends here so every caller is covered.
+        from = DateTime.SpecifyKind(from.Date, DateTimeKind.Utc);
+        to = DateTime.SpecifyKind(to.Date, DateTimeKind.Utc);
+
         var vehicles = await _db.Vehicles
             .Where(v => v.UserId == userId)
             .ToListAsync(ct);
 
         // Extend 'to' to include entire day (next day at 00:00)
-        var endOfDay = to.AddDays(1).Date;
+        var endOfDay = to.AddDays(1);
 
         var transactions = await _db.Transactions
             .Where(t => t.Vehicle!.UserId == userId && t.Date >= from && t.Date < endOfDay)

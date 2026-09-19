@@ -30,8 +30,10 @@ public class TransactionService
             .Where(t => t.Vehicle!.UserId == userId);
 
         if (vehicleId.HasValue) query = query.Where(t => t.VehicleId == vehicleId.Value);
-        if (from.HasValue) query = query.Where(t => t.Date >= from.Value.Date);
-        if (to.HasValue) query = query.Where(t => t.Date <= to.Value.Date);
+        // Npgsql requires Kind=Utc for 'timestamp with time zone' columns; query-string
+        // bound DateTimes come back as Kind=Unspecified and throw at the DB otherwise.
+        if (from.HasValue) query = query.Where(t => t.Date >= DateTime.SpecifyKind(from.Value.Date, DateTimeKind.Utc));
+        if (to.HasValue) query = query.Where(t => t.Date <= DateTime.SpecifyKind(to.Value.Date, DateTimeKind.Utc));
         if (category.HasValue) query = query.Where(t => t.Category == category.Value);
 
         return await query
@@ -57,7 +59,7 @@ public class TransactionService
             Type = request.Type,
             Category = request.Category,
             Amount = request.Amount,
-            Date = request.Date.Date,
+            Date = DateTime.SpecifyKind(request.Date.Date, DateTimeKind.Utc),
             Note = request.Note
         };
 
@@ -82,7 +84,7 @@ public class TransactionService
         txn.Type = request.Type;
         txn.Category = request.Category;
         txn.Amount = request.Amount;
-        txn.Date = request.Date.Date;
+        txn.Date = DateTime.SpecifyKind(request.Date.Date, DateTimeKind.Utc);
         txn.Note = request.Note;
 
         await _db.SaveChangesAsync(ct);
