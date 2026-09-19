@@ -36,8 +36,11 @@ public class DashboardService
             .Where(v => v.UserId == userId)
             .ToListAsync(ct);
 
+        // Extend 'to' to include entire day (next day at 00:00)
+        var endOfDay = to.AddDays(1).Date;
+
         var transactions = await _db.Transactions
-            .Where(t => t.Vehicle!.UserId == userId && t.Date >= from && t.Date <= to)
+            .Where(t => t.Vehicle!.UserId == userId && t.Date >= from && t.Date < endOfDay)
             .ToListAsync(ct);
 
         // Profit is always Income - Expense, computed here in C# — never trusted
