@@ -23,201 +23,201 @@ namespace VehicleProfitTracker.API.Migrations
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("VehicleProfitTracker.API.Models.RefreshToken", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+            {
+                b.Property<Guid>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("uuid");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                b.Property<DateTime>("CreatedAt")
+                    .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("ExpiresAt")
-                        .HasColumnType("timestamp with time zone");
+                b.Property<DateTime>("ExpiresAt")
+                    .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("ReplacedByToken")
-                        .HasColumnType("text");
+                b.Property<string>("ReplacedByToken")
+                    .HasColumnType("text");
 
-                    b.Property<DateTime?>("RevokedAt")
-                        .HasColumnType("timestamp with time zone");
+                b.Property<DateTime?>("RevokedAt")
+                    .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("Token")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
+                b.Property<Guid>("UserId")
+                    .HasColumnType("uuid");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("Token")
-                        .IsUnique();
+                b.HasIndex("Token")
+                    .IsUnique();
 
-                    b.HasIndex("UserId");
+                b.HasIndex("UserId");
 
-                    b.ToTable("refresh_tokens", (string)null);
-                });
+                b.ToTable("refresh_tokens", (string)null);
+            });
 
             modelBuilder.Entity("VehicleProfitTracker.API.Models.Transaction", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+            {
+                b.Property<Guid>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("uuid");
 
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(12,2)");
+                b.Property<decimal>("Amount")
+                    .HasColumnType("decimal(12,2)");
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                b.Property<string>("Category")
+                    .IsRequired()
+                    .HasMaxLength(20)
+                    .HasColumnType("character varying(20)");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                b.Property<DateTime>("CreatedAt")
+                    .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
+                b.Property<DateTime>("Date")
+                    .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Note")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                b.Property<string>("Note")
+                    .HasMaxLength(500)
+                    .HasColumnType("character varying(500)");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                b.Property<string>("Type")
+                    .IsRequired()
+                    .HasMaxLength(20)
+                    .HasColumnType("character varying(20)");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
+                b.Property<DateTime>("UpdatedAt")
+                    .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("VehicleId")
-                        .HasColumnType("uuid");
+                b.Property<Guid>("VehicleId")
+                    .HasColumnType("uuid");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("VehicleId", "Date");
+                b.HasIndex("VehicleId", "Date");
 
-                    b.ToTable("transactions", (string)null);
-                });
+                b.ToTable("transactions", (string)null);
+            });
 
             modelBuilder.Entity("VehicleProfitTracker.API.Models.User", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+            {
+                b.Property<Guid>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("uuid");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                b.Property<DateTime>("CreatedAt")
+                    .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime?>("LastLoginAt")
-                        .HasColumnType("timestamp with time zone");
+                b.Property<DateTime?>("LastLoginAt")
+                    .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .HasColumnType("character varying(200)");
 
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("PasswordHash")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.Property<string>("PasswordResetToken")
-                        .HasColumnType("text");
+                b.Property<string>("PasswordResetToken")
+                    .HasColumnType("text");
 
-                    b.Property<DateTime?>("PasswordResetTokenExpiresAt")
-                        .HasColumnType("timestamp with time zone");
+                b.Property<DateTime?>("PasswordResetTokenExpiresAt")
+                    .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                b.Property<string>("Phone")
+                    .IsRequired()
+                    .HasMaxLength(20)
+                    .HasColumnType("character varying(20)");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
+                b.Property<DateTime>("UpdatedAt")
+                    .HasColumnType("timestamp with time zone");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("Phone")
-                        .IsUnique();
+                b.HasIndex("Phone")
+                    .IsUnique();
 
-                    b.ToTable("users", (string)null);
-                });
+                b.ToTable("users", (string)null);
+            });
 
             modelBuilder.Entity("VehicleProfitTracker.API.Models.Vehicle", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+            {
+                b.Property<Guid>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("uuid");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                b.Property<DateTime>("CreatedAt")
+                    .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
+                b.Property<DateTime>("UpdatedAt")
+                    .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
+                b.Property<Guid>("UserId")
+                    .HasColumnType("uuid");
 
-                    b.Property<string>("VehicleNumber")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                b.Property<string>("VehicleNumber")
+                    .IsRequired()
+                    .HasMaxLength(20)
+                    .HasColumnType("character varying(20)");
 
-                    b.Property<string>("VehicleType")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                b.Property<string>("VehicleType")
+                    .IsRequired()
+                    .HasMaxLength(20)
+                    .HasColumnType("character varying(20)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("UserId", "VehicleNumber");
+                b.HasIndex("UserId", "VehicleNumber");
 
-                    b.ToTable("vehicles", (string)null);
-                });
+                b.ToTable("vehicles", (string)null);
+            });
 
             modelBuilder.Entity("VehicleProfitTracker.API.Models.RefreshToken", b =>
-                {
-                    b.HasOne("VehicleProfitTracker.API.Models.User", "User")
-                        .WithMany("RefreshTokens")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            {
+                b.HasOne("VehicleProfitTracker.API.Models.User", "User")
+                    .WithMany("RefreshTokens")
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.Navigation("User");
-                });
+                b.Navigation("User");
+            });
 
             modelBuilder.Entity("VehicleProfitTracker.API.Models.Transaction", b =>
-                {
-                    b.HasOne("VehicleProfitTracker.API.Models.Vehicle", "Vehicle")
-                        .WithMany("Transactions")
-                        .HasForeignKey("VehicleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            {
+                b.HasOne("VehicleProfitTracker.API.Models.Vehicle", "Vehicle")
+                    .WithMany("Transactions")
+                    .HasForeignKey("VehicleId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.Navigation("Vehicle");
-                });
+                b.Navigation("Vehicle");
+            });
 
             modelBuilder.Entity("VehicleProfitTracker.API.Models.Vehicle", b =>
-                {
-                    b.HasOne("VehicleProfitTracker.API.Models.User", "User")
-                        .WithMany("Vehicles")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            {
+                b.HasOne("VehicleProfitTracker.API.Models.User", "User")
+                    .WithMany("Vehicles")
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.Navigation("User");
-                });
+                b.Navigation("User");
+            });
 
             modelBuilder.Entity("VehicleProfitTracker.API.Models.User", b =>
-                {
-                    b.Navigation("RefreshTokens");
+            {
+                b.Navigation("RefreshTokens");
 
-                    b.Navigation("Vehicles");
-                });
+                b.Navigation("Vehicles");
+            });
 
             modelBuilder.Entity("VehicleProfitTracker.API.Models.Vehicle", b =>
-                {
-                    b.Navigation("Transactions");
-                });
+            {
+                b.Navigation("Transactions");
+            });
 #pragma warning restore 612, 618
         }
     }

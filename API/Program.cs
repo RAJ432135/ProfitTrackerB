@@ -44,7 +44,7 @@ builder.Services.AddSwaggerGen(c =>
 
 // EF Core - PostgreSQL. Support both Railway (DATABASE_URL) and local/Supabase connections.
 // Railway automatically provides DATABASE_URL environment variable.
-var connectionString = builder.Configuration["DATABASE_URL"] 
+var connectionString = builder.Configuration["DATABASE_URL"]
     ?? builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Neither DATABASE_URL environment variable nor 'DefaultConnection' connection string is configured.");
 
@@ -99,7 +99,10 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+});
 
 // Basic rate limiting — protects auth endpoints from brute force.
 builder.Services.AddMemoryCache();
@@ -122,7 +125,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseIpRateLimiting();
-app.UseHttpsRedirection();
+
+// Railway (and most PaaS hosts) terminate TLS at their edge proxy — the
+// container itself only ever receives plain HTTP. UseHttpsRedirection() would
+// otherwise redirect every request, causing a loop in production.
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 // Baseline security headers — cheap, broadly-applicable defense-in-depth.
 app.Use(async (context, next) =>
@@ -148,7 +158,7 @@ app.MapGet("/health", async (AppDbContext db) =>
         if (!canConnect)
             return Results.Json(new { status = "unhealthy", db = "unreachable" }, statusCode: 503);
 
-        return Results.Ok(new { status = "ok", db = "connected", timestampUtc = DateTime.UtcNow });
+        return Results.Ok(new { status = "ok", db = "connected", timestampUtc = DateTime.UtcNow, build = "admin-analytics-subscriptions-2026-09-20" });
     }
     catch (Exception ex)
     {

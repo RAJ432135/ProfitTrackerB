@@ -25,3 +25,18 @@ public enum VehicleType
     Pickup,
     Other
 }
+
+public enum UserRole
+{
+    User,
+    Admin
+}
+
+public enum SubscriptionStatus
+{
+    None,
+    Active,
+    Cancelled,
+    Expired,
+    Pending
+}
