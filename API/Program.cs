@@ -62,6 +62,7 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<VehicleService>();
 builder.Services.AddScoped<TransactionService>();
 builder.Services.AddScoped<DashboardService>();
+builder.Services.AddScoped<AppSettingsService>();
 
 // CORS for the mobile app. Tighten origins for production.
 builder.Services.AddCors(options =>

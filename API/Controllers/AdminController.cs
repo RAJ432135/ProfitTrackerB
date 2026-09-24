@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using VehicleProfitTracker.API.Data;
 using VehicleProfitTracker.API.DTOs;
 using VehicleProfitTracker.API.Models;
+using VehicleProfitTracker.API.Services;
 
 namespace VehicleProfitTracker.API.Controllers;
 
@@ -13,8 +14,27 @@ namespace VehicleProfitTracker.API.Controllers;
 public class AdminController : ControllerBase
 {
     private readonly AppDbContext _db;
+    private readonly AppSettingsService _settingsService;
 
-    public AdminController(AppDbContext db) => _db = db;
+    public AdminController(AppDbContext db, AppSettingsService settingsService)
+    {
+        _db = db;
+        _settingsService = settingsService;
+    }
+
+    [HttpGet("settings")]
+    public async Task<ActionResult<AppSettingsResponse>> GetSettings(CancellationToken ct)
+    {
+        var settings = await _settingsService.GetAsync(ct);
+        return Ok(new AppSettingsResponse(settings.PasswordResetEnabled, settings.SubscriptionsEnabled));
+    }
+
+    [HttpPut("settings")]
+    public async Task<ActionResult<AppSettingsResponse>> UpdateSettings(UpdateAppSettingsRequest request, CancellationToken ct)
+    {
+        var settings = await _settingsService.UpdateAsync(request, ct);
+        return Ok(new AppSettingsResponse(settings.PasswordResetEnabled, settings.SubscriptionsEnabled));
+    }
 
     [HttpGet("metrics")]
     public async Task<ActionResult<AdminMetricsResponse>> Metrics(CancellationToken ct)

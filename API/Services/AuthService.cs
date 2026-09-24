@@ -20,17 +20,20 @@ public class AuthService
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtService _jwtService;
     private readonly ILogger<AuthService> _logger;
+    private readonly AppSettingsService _settingsService;
 
     public AuthService(
         AppDbContext db,
         IPasswordHasher passwordHasher,
         IJwtService jwtService,
-        ILogger<AuthService> logger)
+        ILogger<AuthService> logger,
+        AppSettingsService settingsService)
     {
         _db = db;
         _passwordHasher = passwordHasher;
         _jwtService = jwtService;
         _logger = logger;
+        _settingsService = settingsService;
     }
 
     public async Task<RegisterResponse> RegisterAsync(RegisterRequest request, CancellationToken ct = default)
@@ -136,6 +139,10 @@ public class AuthService
 
     public async Task ForgotPasswordAsync(ForgotPasswordRequest request, CancellationToken ct = default)
     {
+        var settings = await _settingsService.GetAsync(ct);
+        if (!settings.PasswordResetEnabled)
+            throw new ForbiddenAppException("Password reset is currently unavailable. Please contact support.");
+
         var user = await _db.Users.FirstOrDefaultAsync(u => u.Phone == request.Phone, ct);
         if (user is null) return; // don't reveal whether the phone exists
 
@@ -151,6 +158,10 @@ public class AuthService
 
     public async Task ResetPasswordAsync(ResetPasswordRequest request, CancellationToken ct = default)
     {
+        var settings = await _settingsService.GetAsync(ct);
+        if (!settings.PasswordResetEnabled)
+            throw new ForbiddenAppException("Password reset is currently unavailable. Please contact support.");
+
         if (string.IsNullOrWhiteSpace(request.NewPassword) || request.NewPassword.Length < 6)
             throw new ValidationAppException("newPassword", "Password must be at least 6 characters.");
 
