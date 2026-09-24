@@ -73,7 +73,7 @@ public class AuthService
         var (accessToken, refreshToken) = await IssueTokenPairAsync(user, request.RememberMe, ct);
         await _db.SaveChangesAsync(ct);
 
-        return new LoginResponse(accessToken, refreshToken, new UserSummary(user.Id, user.Name, user.Phone));
+        return new LoginResponse(accessToken, refreshToken, new UserSummary(user.Id, user.Name, user.Phone, user.Role.ToString()));
     }
 
     public async Task<RefreshTokenResponse> RefreshAsync(RefreshTokenRequest request, CancellationToken ct = default)
